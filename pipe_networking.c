@@ -1,4 +1,5 @@
 #include "pipe_networking.h"
+#include <errno.h>
 
 /*=========================
   server_setup
@@ -14,9 +15,15 @@
 int server_setup() {
   int pwk_fd;
   printf("Making the pipe\n");
-  mkfifo("pwk", 0600);
+  int er = mkfifo("pwk", 0600);
+  if(er < 0){
+    printf("Error fifoing: %s\n", strerror(errno));
+  }
   printf("Opening...\n");
-  pwk_fd = open("pwk", O_RDONLY);
+  int err = pwk_fd = open("pwk", O_RDONLY);
+  if(err < 0){
+    printf("Error opening: %s\n", strerror(errno));
+  }
   printf("Connection made!\n");
   remove("pwk");
   return pwk_fd;

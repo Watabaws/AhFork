@@ -14,19 +14,21 @@ static void sighandler(int signo) {
 int main() {
   while(1){
     int from_cliente = server_setup();
-    char * client_message[BUFFER_SIZE];
 
     if(!fork()){
-      while(read(from_cliente, client_message, sizeof(client_message))){
-        printf("Received Message: [%s] from client!\n", client_message);
-        //process(buffer);
-        
-      }
+      subserver(from_cliente);
     }
   }
 }
 
 void subserver(int from_client) {
+  char client_message[BUFFER_SIZE];
+  while(read(from_client, client_message, sizeof(client_message))){
+    printf("Received Message: [%s] from client!\n", client_message);
+    //process(client_message);
+    int to_cliente = server_connect(from_client);
+    write(to_cliente, client_message, sizeof(client_message));
+  }
 }
 
 void process(char * s) {
