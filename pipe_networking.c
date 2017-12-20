@@ -102,8 +102,9 @@ int client_handshake(int *to_server) {
 
   //send pp name to server
   printf("[client] handshake: connecting to wkp\n");
-  *to_server = open( "luigi", O_WRONLY, 0);
+  *to_server = open( "pwk", O_WRONLY, 0);
   if ( *to_server == -1 )
+    printf("Error connecting to server: %s\n", strerror(errno));
     exit(1);
 
   //make private pipe
